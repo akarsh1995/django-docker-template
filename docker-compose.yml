@@ -25,3 +25,17 @@ services:
             - .env
         volumes:
             - ./postgres/data:/var/lib/postgresql/data
+    
+    nginx:
+        build: 
+            dockerfile: ./services/nginx/Dockerfile
+            context: .
+        ports: 
+            - 80:80
+        depends_on: 
+            - app
+        links: 
+            - app:app
+        
+        volumes: 
+            - /Users/akarshjain/Downloads/Seggregated/Media/Images:/media:ro

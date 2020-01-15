@@ -15,6 +15,9 @@ services:
             - ${POSTGRES_DOCKER_HOST}
         links: 
             - ${POSTGRES_DOCKER_HOST}:${POSTGRES_DOCKER_HOST}
+        volumes: 
+            - ./staticfiles:/usr/src/app/staticfiles
+
 
     postgres:
         image: postgres:12.1
@@ -36,6 +39,6 @@ services:
             - app
         links: 
             - app:app
-        
         volumes: 
-            - /Users/akarshjain/Downloads/Seggregated/Media/Images:/media:ro
+            - ./media:/media
+            - ./staticfiles:/static

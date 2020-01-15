@@ -16,12 +16,11 @@ COPY ./app/Pipfile* ./
 RUN pip install pipenv
 
 RUN pipenv sync
-
+ENV PYTHONPATH $PATH:/usr/src
 COPY ./app .
 COPY ./services/uwsgi/* /deployment/
 
-ENV PYTHONPATH $PATH:/usr/src
-CMD ["pipenv run python manage.py runserver 0.0.0.0:8000"]
+CMD ["uwsgi"]
 
 COPY ./services/app/entrypoint.sh /usr/local/bin/entrypoint.sh
 

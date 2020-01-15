@@ -51,8 +51,13 @@ case "$1" in
         pipenv run python manage.py "${@:2}"
     ;;
     setup_db)
-        psql -h $POSTGRES_DOCKER_HOST -U $POSTGRES_USER -c "CREATE DATABASE $POSTGRES_DATABASE"
-        pipenv run python manage.py migrate
+        if psql -h $POSTGRES_DOCKER_HOST -U $POSTGRES_USER -lqt | cut -d \| -f 1 | grep -qw $POSTGRES_DATABASE; then
+            echo "Database already exists skipping"
+        else
+            echo "Database does not exist creating one"
+            psql -h $POSTGRES_DOCKER_HOST -U $POSTGRES_USER -c "CREATE DATABASE $POSTGRES_DATABASE"
+        fi
+        pipenv run python manage.py createsuperuser --noinput
     ;;
     lint)
         pipenv run pylint "${@:2}"
@@ -64,6 +69,8 @@ case "$1" in
         pipenv run python manage.py shell_plus
     ;;
     uwsgi)
+        pipenv run python manage.py migrate
+        pipenv run python manage.py collectstatic --noinput
         echo "Running App (uWSGI)..."
         write_uwsgi
         pipenv run uwsgi --ini /uwsgi.ini

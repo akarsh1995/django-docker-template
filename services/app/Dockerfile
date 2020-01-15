@@ -21,3 +21,9 @@ RUN pipenv sync
 COPY ./app .
 
 CMD ["pipenv run python manage.py runserver 0.0.0.0:8000"]
+
+COPY ./services/app/entrypoint.sh /usr/local/bin/entrypoint.sh
+
+RUN chmod a+x /usr/local/bin/entrypoint.sh
+
+ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]

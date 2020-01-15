@@ -15,6 +15,11 @@ set -e
 
 export PGPASSWORD=$POSTGRES_PASSWORD
 
+# write uwsgi
+write_uwsgi() {
+    pipenv run python /deployment/uwsgi_gen.py /deployment/uwsgi.ini /uwsgi.ini
+}
+
 # Define help message
 show_help() {
     echo """
@@ -57,6 +62,11 @@ case "$1" in
     ;;
     shell)
         pipenv run python manage.py shell_plus
+    ;;
+    uwsgi)
+        echo "Running App (uWSGI)..."
+        write_uwsgi
+        pipenv run uwsgi --ini /uwsgi.ini
     ;;
     *)
         show_help

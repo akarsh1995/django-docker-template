@@ -13,13 +13,14 @@ RUN apk add --no-cache --virtual .build-deps \
     postgresql-dev postgresql-client gettext
 
 COPY ./app/Pipfile* ./
-
 RUN pip install pipenv
 
 RUN pipenv sync
 
 COPY ./app .
+COPY ./services/uwsgi/* /deployment/
 
+ENV PYTHONPATH $PATH:/usr/src
 CMD ["pipenv run python manage.py runserver 0.0.0.0:8000"]
 
 COPY ./services/app/entrypoint.sh /usr/local/bin/entrypoint.sh

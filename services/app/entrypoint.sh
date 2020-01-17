@@ -17,7 +17,7 @@ export PGPASSWORD=$POSTGRES_PASSWORD
 
 # write uwsgi
 write_uwsgi() {
-    pipenv run python /deployment/uwsgi_gen.py /deployment/uwsgi.ini /uwsgi.ini
+    envsubst < /deployment/uwsgi.ini > /uwsgi.ini
 }
 
 # Define help message

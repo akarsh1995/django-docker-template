@@ -3,4 +3,5 @@
 .env
 postgres
 staticfiles
+media
 .idea

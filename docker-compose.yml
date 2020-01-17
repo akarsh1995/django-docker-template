@@ -7,8 +7,10 @@ services:
             context: .
         command: uwsgi
         ports:
-            - "8000:8000"
+            - "${APP_PORT}:${APP_PORT}"
             - "8001:8001"
+        expose:
+          - ${APP_PORT}
         env_file: 
             .env
         depends_on: 
@@ -17,7 +19,6 @@ services:
             - ${POSTGRES_DOCKER_HOST}:${POSTGRES_DOCKER_HOST}
         volumes: 
             - ./staticfiles:/usr/src/app/staticfiles
-
 
     postgres:
         image: postgres:12.1
@@ -28,17 +29,26 @@ services:
             - .env
         volumes:
             - ./postgres/data:/var/lib/postgresql/data
-    
+
     nginx:
-        build: 
-            dockerfile: ./services/nginx/Dockerfile
-            context: .
-        ports: 
-            - 80:80
-        depends_on: 
+        restart: unless-stopped
+        image: staticfloat/nginx-certbot
+        ports:
+            - 80:80/tcp
+            - 443:443/tcp
+        environment:
+            ENVSUBST_VARS: FQDN
+        depends_on:
             - app
-        links: 
+        links:
             - app:app
-        volumes: 
+        volumes:
+            - ./services/nginx/conf.d:/etc/nginx/user.conf.d:ro
+            - ./services/nginx/nginx.conf:/etc/nginx/nginx.conf
+            - letsencrypt:/etc/letsencrypt
             - ./media:/media
             - ./staticfiles:/static
+        env_file:
+          - .env
+volumes:
+    letsencrypt:

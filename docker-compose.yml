@@ -19,6 +19,7 @@ services:
             - ${POSTGRES_DOCKER_HOST}:${POSTGRES_DOCKER_HOST}
         volumes: 
             - ./staticfiles:/usr/src/app/staticfiles
+            - ./media:/usr/src/app/media
 
     postgres:
         image: postgres:12.1

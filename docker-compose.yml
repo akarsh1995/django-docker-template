@@ -11,8 +11,8 @@ services:
             - "8001:8001"
         expose:
           - ${APP_PORT}
-        env_file: 
-            .env
+        env_file:
+            - .envs/.env
         depends_on: 
             - ${POSTGRES_DOCKER_HOST}
         links: 
@@ -27,7 +27,7 @@ services:
         ports:
             - "${POSTGRES_PORT}:${POSTGRES_PORT}"
         env_file:
-            - .env
+            - .envs/.env
         volumes:
             - ./postgres/data:/var/lib/postgresql/data
 
@@ -50,6 +50,6 @@ services:
             - ./media:/media
             - ./staticfiles:/static
         env_file:
-          - .env
+          - .envs/.env
 volumes:
     letsencrypt:

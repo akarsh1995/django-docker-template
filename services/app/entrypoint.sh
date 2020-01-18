@@ -34,6 +34,7 @@ setup_db : Setup the initial database. Configure \$POSTGRES_DB_NAME in docker-co
 lint     : Run pylint
 python   : Run a python command
 shell    : Start a Django Python shell
+uwsgi    : Run uwsgi socket
 help     : Show this message
 """
 }

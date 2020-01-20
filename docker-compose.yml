@@ -38,7 +38,7 @@ services:
             - 80:80/tcp
             - 443:443/tcp
         environment:
-            ENVSUBST_VARS: FQDN APP_PORT
+            ENVSUBST_VARS: FQDN APP_PORT FQDN_2
         depends_on:
             - app
         links:

@@ -31,24 +31,31 @@ services:
         volumes:
             - ./postgres/data:/var/lib/postgresql/data
 
-    nginx:
-        restart: unless-stopped
-        image: staticfloat/nginx-certbot
-        ports:
-            - 80:80/tcp
-            - 443:443/tcp
+    letsencrypt:
+        image: linuxserver/letsencrypt
+        container_name: letsencrypt
+        cap_add:
+            - NET_ADMIN
         environment:
-            ENVSUBST_VARS: FQDN APP_PORT FQDN_2
+            - PUID=1000
+            - PGID=1000
+            - TZ=Europe/London
+            - URL=${FQDN}
+            - SUBDOMAINS=${SUBDOMAIN},
+            - VALIDATION=http
+            - EMAIL=${CERTBOT_EMAIL}
+        volumes:
+            - ./staticfiles:/static
+            - ./media:/media
+            - ./data/letsencrypt:/config
+            - ./services/nginx/conf.d/:/config/nginx/site-confs/
+        ports:
+            - 443:443
+            - 80:80
+        restart: unless-stopped
+        env_file: 
+            - .env
         depends_on:
             - app
         links:
             - app:app
-        volumes:
-            - ./services/nginx/conf.d:/etc/nginx/user.conf.d:ro
-            - letsencrypt:/etc/letsencrypt
-            - ./media:/media
-            - ./staticfiles:/static
-        env_file:
-            - .env
-volumes:
-    letsencrypt:

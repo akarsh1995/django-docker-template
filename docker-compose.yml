@@ -47,8 +47,7 @@ services:
         volumes:
             - ./staticfiles:/static
             - ./media:/media
-            - ./data/letsencrypt:/config
-            - ./services/nginx/conf.d/:/config/nginx/site-confs/
+            - ./config:/config
         ports:
             - 443:443
             - 80:80

@@ -18,7 +18,7 @@ RUN pip install pipenv
 RUN pipenv sync
 ENV PYTHONPATH $PATH:/usr/src
 COPY ./app .
-COPY ./services/uwsgi/* /deployment/
+COPY ./services/config/uwsgi/* /deployment/
 
 CMD ["uwsgi"]
 
